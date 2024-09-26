@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('<%= song.album_cover %>');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            color: white;
+        }
+        .player-container { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            padding: 20px; 
+            background-color: rgba(0, 0, 0, 0.9); 
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .player-info { 
+            display: flex; 
+            align-items: center; 
+            transition: background-color 0.3s ease; 
+            padding: 10px; 
+        }
+        .album-cover { 
+            width: 100px; 
+            height: 100px; 
+            border-radius: 8px; 
+            margin-right: 20px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .song-details { 
+            flex-grow: 1; 
+        }
+        .song-title { 
+            font-size: 22px; 
+            font-weight: bold; 
+        }
+        .artist, .uploader-name { 
+            color: #d1d1d1; 
+        }
+        .controls { 
+            margin-top: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .playback-bar { 
+            margin: 10px 0; 
+            height: 6px; 
+            background-color: #606060; 
+            width: 100%; 
+            border-radius: 3px; 
+        }
+        .playback-bar-progress { 
+            background-color: #1DB954; 
+            height: 100%; 
+            border-radius: 3px; 
+        }
+        .control-buttons {
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .control-button {
+            border: none; 
+            background-color: transparent; 
+            color: white; 
+            font-size: 36px; 
+            width: 70px; 
+            height: 70px; 
+            border-radius: 50%; 
+            transition: background-color 0.3s ease, transform 0.2s ease; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .control-button:hover { 
+            background-color: rgba(255, 255, 255, 0.1); 
+            transform: scale(1.1); 
+        }
+        .volume-control { 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center; 
+            margin-top: 10px; 
+        }
+        .volume-bar { 
+            width: 120px; 
+            height: 6px; 
+            background-color: #606060; 
+            margin-left: 10px; 
+            border-radius: 3px; 
+            position: relative; 
+            cursor: pointer; 
+        }
+        .volume-bar-progress { 
+            background-color: #1DB954; 
+            height: 100%; 
+            border-radius: 3px; 
+        }
+        .mic { 
+            font-size: 24px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="player-container">
+            <div class="player-info">
+                <img src="<%= song.album_cover %>" alt="Album Cover" class="album-cover">
+                <div class="song-details">
+                    <div class="song-title"><%= song.song_title %></div>
+                    <div class="artist"><%= song.artist_name %></div>
+                    <div class="uploader-name"><%= song.uploader_name %></div>
+                </div>
+            </div>
+            <div class="volume-control">
+                <span>🔊</span>
+                <div class="volume-bar">
+                    <div class="volume-bar-progress" id="volume-bar-progress" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="playback-bar">
+                <div id="playback-bar-progress" class="playback-bar-progress" style="width: 0%;"></div>
+            </div>
+            <div class="controls">
+                <div class="control-buttons">
+                    <button id="prev-btn" class="control-button">⏮</button>
+                    <button id="play-pause-btn" class="control-button">⏯</button>
+                    <button id="next-btn" class="control-button">⏭</button>
+                </div>
+            </div>           
+        </div>
+        <audio id="audio-player" src="/uploads/<%= song.filename %>" preload="metadata"></audio>
+    </div>
+    <script>
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playbackBarProgress = document.getElementById('playback-bar-progress');
+        const volumeBar = document.querySelector('.volume-bar');
+        const volumeBarProgress = document.getElementById('volume-bar-progress');
+        let isPlaying = false;
+
+        // Play/pause functionality
+        function togglePlayPause() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playPauseBtn.textContent = '⏯';
+            } else {
+                audioPlayer.play().catch((error) => console.error('Error playing audio:', error));
+                playPauseBtn.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+
+        // Playback progress bar
+        audioPlayer.addEventListener('timeupdate', () => {
+            const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            playbackBarProgress.style.width = percentage + '%';
+        });
+
+        // Previous button resets song to the start
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            audioPlayer.currentTime = 0;
+        });
+
+        // Next button skips to the end of the song
+        document.getElementById('next-btn').addEventListener('click', () => {
+            audioPlayer.currentTime = audioPlayer.duration;
+        });
+
+        // Volume control functionality
+        volumeBar.addEventListener('click', (e) => {
+            const rect = volumeBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const volume = clickX / volumeBar.offsetWidth;
+            
+            // Set the audio volume
+            audioPlayer.volume = volume;
+
+            // Update the volume bar progress
+            volumeBarProgress.style.width = `${volume * 100}%`;
+        });
+
+        // Set initial volume
+        audioPlayer.volume = 1;
+    </script>
+</body>
+</html>

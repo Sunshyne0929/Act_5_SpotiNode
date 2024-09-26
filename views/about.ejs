@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About SwiftSync</title>
+    <style>
+        /* Pink-themed styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2C003E; /* Dark purple background */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #E91E63; /* Pink color for navigation */
+            padding: 15px;
+            display: flex;
+            justify-content: space-between; /* Aligns items to both sides */
+            align-items: center;
+        }
+
+        nav h1 {
+            margin: 0; /* Removes margin for title */
+            font-size: 1.5rem; /* Adjusts font size for title */
+            color: white; /* Color for title */
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px;
+        }
+
+        nav a:hover {
+            background-color: #FF4081; /* Lighter pink for hover */
+            border-radius: 5px;
+        }
+        .container {
+            margin: 40px;
+            padding: 20px;
+            background-color: #800080; /* Deep purple background for content */
+            border-radius: 15px;
+        }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ol, ul {
+            margin-left: 20px;
+        }
+
+        h3 {
+            margin-top: 30px;
+            font-size: 1.8rem;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div>
+            <h1>SwiftSync</h1>
+        </div>
+        <div>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <div class="container">
+        <h2>About SwiftSync: Your Personal Music Upload Platform</h2>
+
+        <p><strong>SwiftSync</strong> is a web-based application designed to provide a platform for users to upload, manage, and enjoy their personal music collections. Inspired by the sleek design of popular streaming services, SwiftSync focuses on offering an intuitive and user-friendly experience for music enthusiasts.</p>
+
+        <h3>Key Features</h3>
+        <ol>
+            <li><strong>Music Uploads:</strong> Users can upload their music files by filling out a simple form that includes:
+                <ul>
+                    <li><strong>Track Title:</strong> The name of the song.</li>
+                    <li><strong>MP3 File:</strong> Upload MP3 files directly.</li>
+                    <li><strong>Album Cover:</strong> Optionally upload an image for the album cover.</li>
+                </ul>
+            </li>
+            <li><strong>Dynamic Music Library:</strong> After uploading, tracks are displayed in a personal library section, showcasing album covers and song titles.</li>
+            <li><strong>Manage Your Library:</strong> Users can delete songs they no longer want, ensuring a tidy and organized music collection.</li>
+        </ol>
+
+        <h3>Technology Stack</h3>
+        <p>SwiftSync is developed using the following technologies:</p>
+        <ul>
+            <li><strong>Frontend:</strong> Built with HTML, CSS, and JavaScript for a seamless user experience.</li>
+            <li><strong>Backend:</strong> Utilizes Node.js and Express for server-side logic and handling file uploads.</li>
+            <li><strong>Database:</strong> A database (MySQL) is used to store user data and music metadata.</li>
+        </ul>
+    </div>
+</body>
+</html>

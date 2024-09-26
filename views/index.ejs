@@ -1,0 +1,226 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Uploads</title>
+    <style>
+        /* Pink theme styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2C003E; /* Dark purple background */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #E91E63; /* Main pink color */
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px;
+        }
+
+        nav a:hover {
+            background-color: #FF4081; /* Lighter pink for hover */
+            border-radius: 5px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: white;
+        }
+
+        h2 {
+            margin-top: 40px;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px;
+            padding: 20px;
+            background-color: #800080; /* Deep pink/purple background for form section */
+            border-radius: 15px;
+        }
+
+        .album-cover {
+            flex: 1;
+            text-align: center;
+        }
+
+        .album-cover img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .upload-form {
+            flex: 1;
+            text-align: right;
+            padding: 20px;
+        }
+
+        .upload-form input[type="file"], .upload-form input[type="text"], .upload-form button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #880E4F; /* Darker pink for form fields */
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .upload-form button {
+            background-color: #E91E63;
+            cursor: pointer;
+        }
+
+        .upload-form button:hover {
+            background-color: #FF4081; /* Lighter pink on hover */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin: 20px 0;
+            background-color: #880E4F; /* Darker pink for song list */
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        li img {
+            margin-right: 20px;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .song-details {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        /* General Button Styling (For Both PLAY and DELETE) */
+        button {
+            background-color: #E91E63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #FF4081;
+        }
+
+        /* Spacing between PLAY and DELETE buttons */
+        .song-actions {
+            display: flex;
+            gap: 10px; /* Add space between the buttons */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+
+        
+        <h1>SwiftSync</h1>
+        <div>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+
+    <!-- Main Container with Album Cover and Upload Form -->
+    <div class="container">
+        <!-- Album Cover -->
+        <div class="album-cover">
+            <% if (songs.length > 0 && songs[0].album_cover) { %>
+                <img src="<%= songs[0].album_cover %>" alt="Album Cover">
+            <% } else { %>
+                <img src="https://via.placeholder.com/300?text=My+Personal+Hits" alt="List of Songs">
+            <% } %>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="upload-form">
+            <h1>Upload Your Music</h1>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <label for="uploaderName">Music Name:</label>
+                <input type="text" name="uploaderName" id="uploaderName" required>
+                <br><br>
+                <label for="mp3file">Upload MP3 File:</label>
+                <input type="file" name="mp3file" id="mp3file" accept="audio/mp3" required>
+                <br><br>
+                <label for="albumCover">Upload Album Cover (Optional):</label>
+                <input type="file" name="albumCover" id="albumCover" accept="image/*">
+                <br><br>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Uploaded Songs Section -->
+    <h2>List of Songs</h2>
+    <ul>
+        <% songs.forEach(song => { %>
+            <li>
+                <div class="song-details">
+                    <% if (song.album_cover) { %>
+                        <img src="<%= song.album_cover %>" alt="Album Cover">
+                    <% } else { %>
+                        <img src="https://via.placeholder.com/60?text=No+Cover" alt="No Album Cover">
+                    <% } %>
+                    <p><strong><%= song.uploader_name || 'Unknown Artist' %></strong></p>
+                </div>
+
+                <!-- Button actions: PLAY and DELETE -->
+                <div class="song-actions">
+                    <!-- PLAY Button -->
+                    <a href="/player/<%= song.id %>">
+                        <button>PLAY</button>
+                    </a>
+
+                    <!-- DELETE Button -->
+                    <form action="/delete" method="POST">
+                        <input type="hidden" name="song_id" value="<%= song.id %>">
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            </li>
+        <% }) %>
+    </ul>
+
+</body>
+</html>
